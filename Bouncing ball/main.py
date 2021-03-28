@@ -4,7 +4,7 @@ import random as rand
 from pygame.math import Vector2
 
 class Ball:
-    def __init__(self, x, y, vel_x=1, vel_y=0, accell=(0,0.2), ball_radius=20):
+    def __init__(self, x, y, vel_x=1, vel_y=0, accell=(0,0.15), ball_radius=20):
         self.pos = Vector2(x,y) #position
         self.vel = Vector2(vel_x,vel_y) #velocity
         self.acc = Vector2(accell) #accelleration

@@ -83,7 +83,7 @@ while True:
         ball.update()
     pygame.display.update()
     
-    clock.tick()
+    clock.tick(100)
     
     #print(len(balls))
     #if clock.get_fps() < 90 :

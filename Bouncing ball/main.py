@@ -4,7 +4,7 @@ import random as rand
 from pygame.math import Vector2
 
 class Ball:
-    def __init__(self, x, y, vel_x=1, vel_y=0, accell=(0,0.15), ball_radius=20):
+    def __init__(self, x, y, vel_x=1, vel_y=0, accell=(0,0.3), ball_radius=20):
         self.pos = Vector2(x,y) #position
         self.vel = Vector2(vel_x,vel_y) #velocity
         self.acc = Vector2(accell) #accelleration
@@ -29,14 +29,16 @@ class Ball:
             vel_diff = self.vel-ball.vel
             pos_diff = self.pos - ball.pos
             try:
+                self.pos -= 0.5*(pos_diff.magnitude() - (self.ball_radius + ball.ball_radius))*pos_diff.normalize()
+                ball.pos += 0.5*(pos_diff.magnitude() - (self.ball_radius + ball.ball_radius))*pos_diff.normalize()            
                 self.vel -= ((vel_diff).dot(pos_diff) / (pos_diff).magnitude_squared() ) * (pos_diff)# + self.acc
                 ball.vel -= ((-vel_diff).dot(-pos_diff) / (-pos_diff).magnitude_squared() ) * (-pos_diff)# + ball.acc
             except:
                 pass
+            #velocity lost from collisions
             self.vel *= 1
             ball.vel *= 1   
-            self.pos += 0.1*pos_diff
-            ball.pos -= 0.1*pos_diff
+
 
     def update(self):
         for ball in balls:
@@ -51,14 +53,18 @@ class Ball:
             
     def check_border_collision(self):
         if self.pos.y >= height-self.ball_radius and self.vel.y > 0: #check bottom border
-            self.vel.y = -self.vel.y - self.acc.y
+            self.vel.y = -self.vel.y - 0.5*self.acc.y
+            self.pos.y = height-self.ball_radius
         elif self.pos.y <= 0+self.ball_radius and self.vel.y < 0: #check top border
-            self.vel.y = -self.vel.y - self.acc.y
+            self.vel.y = -self.vel.y - 0.5*self.acc.y
+            self.pos.y = self.ball_radius
 
         if self.pos.x >= width-self.ball_radius and self.vel.x > 0: #check right border
-            self.vel.x = -self.vel.x - self.acc.x
+            self.vel.x = -self.vel.x - 0.5*self.acc.x
+            self.pos.x = width - self.ball_radius
         elif self.pos.x <= 0+self.ball_radius and self.vel.x < 0: #check left border
-            self.vel.x = -self.vel.x - self.acc.x 
+            self.vel.x = -self.vel.x - 0.5*self.acc.x
+            self.pos.x = self.ball_radius
 
 win_size = width, height = 1000, 1000
 BG_COLOUR = pygame.Color(150,200,255) #light pastel blue
